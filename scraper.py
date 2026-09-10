@@ -2,6 +2,7 @@ import pandas as pd
 from jobspy import scrape_jobs
 import os
 import smtplib
+from datetime import datetime
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.application import MIMEApplication
@@ -43,6 +44,9 @@ todas_las_vacantes = pd.concat([jobs_analyst_cdmx, jobs_engineer_cdmx, jobs_full
 todas_las_vacantes = todas_las_vacantes.drop_duplicates(subset=['title', 'company', 'location']).fillna("No especificado")
 archivo_csv = "vacantes_combinadas.csv"
 todas_las_vacantes.to_csv(archivo_csv, index=False)
+
+# Obtener fecha actual para el asunto y reporte
+fecha_envio = datetime.now().strftime("%d/%m/%Y")
 
 # 4. Generar el cuerpo del correo en HTML (Estilo Mercado Libre)
 html_content = f"""
@@ -142,6 +146,11 @@ html_content = f"""
     .job-company {{
       font-size: 13px;
       color: #666666;
+      margin: 0 0 3px 0;
+    }}
+    .job-date {{
+      font-size: 12px;
+      color: #8c8c8c;
       margin: 0 0 12px 0;
     }}
     .btn-link {{
@@ -180,7 +189,7 @@ html_content = f"""
 
     <!-- Tarjeta principal -->
     <div class="main-card">
-      <p class="section-header">Detalle del reporte:</p>
+      <p class="section-header">Detalle del reporte ({fecha_envio}):</p>
 """
 
 # Agrupar vacantes por ubicación
@@ -189,10 +198,12 @@ vacantes_por_ubicacion = todas_las_vacantes.groupby('location')
 for location, group in vacantes_por_ubicacion:
     html_content += f'<div class="location-title">Ubicacion: {location}</div>'
     for index, row in group.iterrows():
+        fecha_publicacion = row.get('date_posted', 'No especificada')
         html_content += f"""
         <div class="job-item">
           <p class="job-name">{row['title']}</p>
           <p class="job-company">Empresa: {row['company']}</p>
+          <p class="job-date">Fecha de publicacion: {fecha_publicacion}</p>
           <a href="{row['job_url']}" class="btn-link" target="_blank">Ver oferta</a>
         </div>
         """
@@ -224,7 +235,7 @@ msg['To'] = destinatario
 if cc_destinatario:
     msg['Cc'] = cc_destinatario
 
-msg['Subject'] = "Reporte de Vacantes: Data y Desarrollador Fullstack"
+msg['Subject'] = f"Reporte de Vacantes: Data y Desarrollador Fullstack - {fecha_envio}"
 msg.attach(MIMEText(html_content, 'html'))
 
 # Adjuntar el CSV
