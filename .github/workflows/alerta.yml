@@ -34,7 +34,7 @@ jobs:
           username: ${{ secrets.MAIL_USERNAME }}
           password: ${{ secrets.MAIL_PASSWORD }}
           subject: Nuevas Vacantes de LinkedIn extraídas
-          to: tu_correo@ejemplo.com # Cambia esto por tu correo receptor
+          to: matheisfn@gmail.com
           from: GitHub Actions
           body: El proceso automatizado finalizó. Adjunto encontrarás las vacantes de las últimas 24 horas.
           attachments: vacantes.csv
