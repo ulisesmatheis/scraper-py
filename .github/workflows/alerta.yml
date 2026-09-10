@@ -2,9 +2,8 @@ name: Alerta de Vacantes LinkedIn
 
 on:
   schedule:
-    # Se ejecuta todos los días a las 13:00 UTC (07:00 AM CST - México)
     - cron: '0 13 * * *'
-  workflow_dispatch: # Permite ejecutarlo manualmente desde GitHub
+  workflow_dispatch:
 
 jobs:
   extraer_y_enviar:
@@ -22,19 +21,9 @@ jobs:
       - name: Instalar librerías
         run: pip install python-jobspy pandas
 
-      - name: Ejecutar script de extracción
+      - name: Ejecutar script y enviar correo
+        env:
+          MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
+          MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
+          MAIL_DESTINO: "matheisfn@gmail.com" # Cambia esto por el correo donde quieres recibir la alerta
         run: python scraper.py
-
-      - name: Enviar correo con resultados
-        uses: dawidd6/action-send-mail@v3
-        with:
-          server_address: smtp.gmail.com
-          server_port: 465
-          secure: true
-          username: ${{ secrets.MAIL_USERNAME }}
-          password: ${{ secrets.MAIL_PASSWORD }}
-          subject: Nuevas Vacantes de LinkedIn extraídas
-          to: matheisfn@gmail.com
-          from: GitHub Actions
-          body: El proceso automatizado finalizó. Adjunto encontrarás las vacantes de las últimas 24 horas.
-          attachments: vacantes.csv
