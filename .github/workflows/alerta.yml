@@ -2,7 +2,9 @@ name: Alerta de Vacantes LinkedIn
 
 on:
   schedule:
-    - cron: '0 13 * * *'
+    # 9:00 AM Hora del Centro de México (UTC-6) = 15:00 UTC
+    # Formato Cron: Minuto Hora DíaMes Mes DíaSemana (1 = Lunes)
+    - cron: '0 15 * * 1'
   workflow_dispatch:
 
 jobs:
@@ -19,7 +21,9 @@ jobs:
           python-version: '3.10'
 
       - name: Instalar librerías
-        run: pip install python-jobspy pandas
+        run: |
+          python -m pip install --upgrade pip
+          pip install python-jobspy pandas
 
       - name: Ejecutar script y enviar correo
         env:
