@@ -44,122 +44,168 @@ todas_las_vacantes = todas_las_vacantes.drop_duplicates(subset=['title', 'compan
 archivo_csv = "vacantes_combinadas.csv"
 todas_las_vacantes.to_csv(archivo_csv, index=False)
 
-# 4. Generar el cuerpo del correo en HTML (Blanco y Negro)
+# 4. Generar el cuerpo del correo en HTML (Estilo Mercado Libre)
 html_content = f"""
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="utf-8">
   <style>
     body {{
-      font-family: 'Segoe UI', Arial, sans-serif;
-      background-color: #000000;
-      color: #ffffff;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background-color: #f5f5f5;
+      color: #333333;
       margin: 0;
-      padding: 20px;
+      padding: 30px 10px;
     }}
     .container {{
-      max-width: 650px;
+      max-width: 580px;
       margin: 0 auto;
-      background: #0a0a0a;
-      border-radius: 4px;
-      overflow: hidden;
-      border: 1px solid #ffffff;
     }}
-    .header {{
-      background: #000000;
-      color: #ffffff;
-      padding: 25px 20px;
-      text-align: center;
-      border-bottom: 1px solid #ffffff;
-    }}
-    .header h2 {{
-      margin: 0;
-      font-size: 22px;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-    }}
-    .header p {{
-      margin: 10px 0 0 0;
-      font-size: 14px;
-      color: #cccccc;
-    }}
-    .content {{
-      padding: 25px 20px;
-    }}
-    .location-header {{
-      color: #ffffff;
-      border-bottom: 2px solid #ffffff;
-      padding-bottom: 6px;
-      margin-top: 30px;
-      font-size: 16px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }}
-    .location-header:first-child {{
-      margin-top: 0;
-    }}
-    .job-card {{
-      background: #121212;
-      border: 1px solid #333333;
-      border-left: 4px solid #ffffff;
-      border-radius: 2px;
-      padding: 16px;
+    .top-bar {{
+      display: table;
+      width: 100%;
       margin-bottom: 12px;
+      font-size: 11px;
+      color: #8c8c8c;
+      letter-spacing: 0.5px;
     }}
-    .job-title {{
-      margin: 0 0 8px 0;
+    .top-title {{
+      display: table-cell;
+      text-align: left;
+      font-weight: 700;
+      color: #333333;
+      text-transform: uppercase;
+    }}
+    .top-id {{
+      display: table-cell;
+      text-align: right;
+      vertical-align: middle;
+    }}
+    .status-card {{
+      background-color: #ffffff;
+      border: 1px solid #e6e6e6;
+      border-left: 4px solid #00a650;
+      border-radius: 6px;
+      padding: 18px 20px;
+      margin-bottom: 14px;
+    }}
+    .status-title {{
       font-size: 16px;
+      font-weight: 700;
+      color: #222222;
+      margin: 0 0 4px 0;
     }}
-    .job-title a {{
-      color: #ffffff;
-      text-decoration: underline;
-      font-weight: 600;
+    .status-subtitle {{
+      font-size: 14px;
+      color: #666666;
+      margin: 0;
     }}
-    .job-detail {{
-      margin: 4px 0;
+    .main-card {{
+      background-color: #ffffff;
+      border: 1px solid #e6e6e6;
+      border-radius: 6px;
+      padding: 24px 20px;
+      margin-bottom: 20px;
+    }}
+    .section-header {{
+      font-size: 15px;
+      font-weight: 700;
+      color: #222222;
+      margin: 0 0 15px 0;
+    }}
+    .location-title {{
       font-size: 13px;
-      color: #cccccc;
+      font-weight: 700;
+      color: #3483fa;
+      margin: 22px 0 10px 0;
+      padding-bottom: 6px;
+      border-bottom: 1px solid #eeeeee;
+      text-transform: uppercase;
+    }}
+    .location-title:first-of-type {{
+      margin-top: 5px;
+    }}
+    .job-item {{
+      padding: 14px 0;
+      border-bottom: 1px solid #f2f2f2;
+    }}
+    .job-item:last-child {{
+      border-bottom: none;
+    }}
+    .job-name {{
+      font-size: 15px;
+      font-weight: 600;
+      color: #222222;
+      margin: 0 0 4px 0;
+    }}
+    .job-company {{
+      font-size: 13px;
+      color: #666666;
+      margin: 0 0 12px 0;
+    }}
+    .btn-link {{
+      display: inline-block;
+      background-color: #3483fa;
+      color: #ffffff !important;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 9px 20px;
+      border-radius: 6px;
     }}
     .footer {{
-      background: #000000;
-      color: #888888;
       text-align: center;
-      padding: 20px;
-      font-size: 11px;
-      line-height: 1.5;
-      border-top: 1px solid #333333;
+      font-size: 12px;
+      color: #999999;
+      line-height: 1.6;
+      margin-top: 25px;
     }}
   </style>
 </head>
 <body>
   <div class="container">
-    <div class="header">
-      <h2>Reporte de Vacantes</h2>
-      <p>Se encontraron <strong>{len(todas_las_vacantes)}</strong> publicaciones en las ultimas {horas} horas</p>
+    
+    <!-- Encabezado superior -->
+    <div class="top-bar">
+      <div class="top-title">REPORTE DE VACANTES</div>
+      <div class="top-id">GITHUB ACTIONS</div>
     </div>
-    <div class="content">
+
+    <!-- Tarjeta de estado (Borde verde) -->
+    <div class="status-card">
+      <p class="status-title">Nuevas vacantes encontradas</p>
+      <p class="status-subtitle">Se detectaron <strong>{len(todas_las_vacantes)}</strong> ofertas en las ultimas {horas} horas.</p>
+    </div>
+
+    <!-- Tarjeta principal -->
+    <div class="main-card">
+      <p class="section-header">Detalle del reporte:</p>
 """
 
 # Agrupar vacantes por ubicación
 vacantes_por_ubicacion = todas_las_vacantes.groupby('location')
 
 for location, group in vacantes_por_ubicacion:
-    html_content += f"<h3 class='location-header'>{location}</h3>"
-    
+    html_content += f'<div class="location-title">Ubicacion: {location}</div>'
     for index, row in group.iterrows():
         html_content += f"""
-        <div class="job-card">
-            <h4 class="job-title"><a href="{row['job_url']}" target="_blank">{row['title']}</a></h4>
-            <p class="job-detail"><strong>Empresa:</strong> {row['company']}</p>
+        <div class="job-item">
+          <p class="job-name">{row['title']}</p>
+          <p class="job-company">Empresa: {row['company']}</p>
+          <a href="{row['job_url']}" class="btn-link" target="_blank">Ver oferta</a>
         </div>
         """
 
 html_content += """
     </div>
+
+    <!-- Pie de pagina -->
     <div class="footer">
-      <p>El archivo adjunto contiene la lista completa en formato CSV.</p>
+      <p>El reporte detallado se encuentra adjunto en formato CSV.</p>
       <p><strong>Por favor no respondas a este correo.</strong><br>Este es un mensaje automatico generado y enviado mediante GitHub Actions.</p>
     </div>
+
   </div>
 </body>
 </html>
@@ -178,10 +224,10 @@ msg['To'] = destinatario
 if cc_destinatario:
     msg['Cc'] = cc_destinatario
 
-msg['Subject'] = "Alerta Automatica: Nuevas Vacantes de Data y Dev"
+msg['Subject'] = "Reporte de Vacantes: Data y Desarrollador Fullstack"
 msg.attach(MIMEText(html_content, 'html'))
 
-# Adjuntar archivo CSV
+# Adjuntar el CSV
 try:
     with open(archivo_csv, "rb") as f:
         adjunto = MIMEApplication(f.read(), _subtype="csv")
@@ -190,7 +236,7 @@ try:
 except FileNotFoundError:
     print("Archivo CSV no encontrado para adjuntar.")
 
-# Enviar correo mediante SMTP
+# Conexión al servidor SMTP
 try:
     server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
     server.login(remitente, password)
