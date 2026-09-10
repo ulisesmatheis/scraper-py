@@ -44,54 +44,54 @@ todas_las_vacantes = todas_las_vacantes.drop_duplicates(subset=['title', 'compan
 archivo_csv = "vacantes_combinadas.csv"
 todas_las_vacantes.to_csv(archivo_csv, index=False)
 
-# 4. Generar el cuerpo del correo en HTML (Diseño Oscuro)
+# 4. Generar el cuerpo del correo en HTML (Blanco y Negro)
 html_content = f"""
 <!DOCTYPE html>
 <html>
 <head>
   <style>
     body {{
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #0f172a;
-      color: #e2e8f0;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background-color: #000000;
+      color: #ffffff;
       margin: 0;
       padding: 20px;
     }}
     .container {{
       max-width: 650px;
       margin: 0 auto;
-      background: #1e293b;
-      border-radius: 8px;
+      background: #0a0a0a;
+      border-radius: 4px;
       overflow: hidden;
-      border: 1px solid #334155;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      border: 1px solid #ffffff;
     }}
     .header {{
-      background: #020617;
-      color: #f8fafc;
+      background: #000000;
+      color: #ffffff;
       padding: 25px 20px;
       text-align: center;
-      border-bottom: 1px solid #334155;
+      border-bottom: 1px solid #ffffff;
     }}
     .header h2 {{
       margin: 0;
-      font-size: 24px;
-      letter-spacing: 0.5px;
+      font-size: 22px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
     }}
     .header p {{
       margin: 10px 0 0 0;
-      font-size: 15px;
-      color: #94a3b8;
+      font-size: 14px;
+      color: #cccccc;
     }}
     .content {{
-      padding: 30px 20px;
+      padding: 25px 20px;
     }}
     .location-header {{
-      color: #38bdf8;
-      border-bottom: 2px solid #334155;
-      padding-bottom: 8px;
+      color: #ffffff;
+      border-bottom: 2px solid #ffffff;
+      padding-bottom: 6px;
       margin-top: 30px;
-      font-size: 18px;
+      font-size: 16px;
       text-transform: uppercase;
       letter-spacing: 1px;
     }}
@@ -99,39 +99,35 @@ html_content = f"""
       margin-top: 0;
     }}
     .job-card {{
-      background: #0f172a;
-      border: 1px solid #334155;
-      border-radius: 6px;
-      padding: 18px;
-      margin-bottom: 15px;
-      border-left: 4px solid #0284c7;
+      background: #121212;
+      border: 1px solid #333333;
+      border-left: 4px solid #ffffff;
+      border-radius: 2px;
+      padding: 16px;
+      margin-bottom: 12px;
     }}
     .job-title {{
       margin: 0 0 8px 0;
-      font-size: 17px;
+      font-size: 16px;
     }}
     .job-title a {{
-      color: #7dd3fc;
-      text-decoration: none;
-      font-weight: 600;
-    }}
-    .job-title a:hover {{
-      color: #38bdf8;
+      color: #ffffff;
       text-decoration: underline;
+      font-weight: 600;
     }}
     .job-detail {{
       margin: 4px 0;
-      font-size: 14px;
-      color: #cbd5e1;
+      font-size: 13px;
+      color: #cccccc;
     }}
     .footer {{
-      background: #020617;
-      color: #64748b;
+      background: #000000;
+      color: #888888;
       text-align: center;
       padding: 20px;
-      font-size: 12px;
+      font-size: 11px;
       line-height: 1.5;
-      border-top: 1px solid #334155;
+      border-top: 1px solid #333333;
     }}
   </style>
 </head>
@@ -139,7 +135,7 @@ html_content = f"""
   <div class="container">
     <div class="header">
       <h2>Reporte de Vacantes</h2>
-      <p>Se encontraron <strong>{len(todas_las_vacantes)}</strong> publicaciones en las últimas {horas} horas</p>
+      <p>Se encontraron <strong>{len(todas_las_vacantes)}</strong> publicaciones en las ultimas {horas} horas</p>
     </div>
     <div class="content">
 """
@@ -194,7 +190,7 @@ try:
 except FileNotFoundError:
     print("Archivo CSV no encontrado para adjuntar.")
 
-# Enviar correo
+# Enviar correo mediante SMTP
 try:
     server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
     server.login(remitente, password)
